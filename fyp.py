@@ -3,18 +3,66 @@ import pandas as pd
 def filter_csv():
     # load file into pd
     df = pd.read_csv('FYP.csv')
-    
+
+    def get_unique_values(column_name):
+        """Helper function to get unique values from a specific column."""
+        if column_name == 'Keywords':
+            # TBD
+            # since the keyword column is just a string of keywords seperated by space
+            # its not possible to distinguish whether each space belong within a keyword or is a sepeator for keywords
+            # the input data has to be updated
+            return ["TBD"]
+        elif column_name in df.columns:
+            return df[column_name].dropna().unique()
+        return []
+
+    def get_filter_input(prompt, column_name):
+        """Helper function to handle user input and display unique values if '?' is entered."""
+        while True:
+            user_input = input(prompt).strip()
+            if user_input == '?':
+                unique_values = get_unique_values(column_name)
+                print(f"Possible values for {column_name}: {', '.join(map(str, unique_values))}")
+                print()
+
+            else:
+                return user_input
+               
     # get input for filters
-    supervisor_filter = input("Enter name of supervisors, separated by comma (or press enter to skip): ").strip()
-    category_filter = input("Enter category names, separated by comma (or press enter to skip): ").strip()
-    type_filter = input("Enter types, separated by comma (or press enter to skip): ").strip()
-    keywords_filter = input("Enter keywords, separated by comma (or press enter to skip): ").strip()
+    supervisor_filter = get_filter_input(
+        "Enter name of supervisors, separated by comma (or press enter to skip, '?' to list options): ", 
+        'Supervisor'
+    )
+    category_filter = get_filter_input(
+        "Enter category names, separated by comma (or press enter to skip, '?' to list options): ", 
+        'Category'
+    )
+    type_filter = get_filter_input(
+        "Enter types, separated by comma (or press enter to skip, '?' to list options): ", 
+        'Type'
+    )
+    keywords_filter = get_filter_input(
+        "Enter keywords, separated by comma (or press enter to skip, '?' to list options): ",
+        'Keywords'
+    )
     
     # get input for blacklist filters
-    blacklist_supervisor = input("Enter name of supervisors to exclude, separated by comma (or press enter to skip): ").strip()
-    blacklist_category = input("Enter category names to exclude, separated by comma (or press enter to skip): ").strip()
-    blacklist_type = input("Enter types to exclude, separated by comma (or press enter to skip): ").strip()
-    blacklist_keywords = input("Enter keywords to exclude, separated by comma (or press enter to skip): ").strip()
+    blacklist_supervisor = get_filter_input(
+        "Enter name of supervisors to exclude, separated by comma (or press enter to skip, '?' to list options): ", 
+        'Supervisor'
+    )
+    blacklist_category = get_filter_input(
+        "Enter category names to exclude, separated by comma (or press enter to skip, '?' to list options): ", 
+        'Category'
+    )
+    blacklist_type = get_filter_input(
+        "Enter types to exclude, separated by comma (or press enter to skip, '?' to list options): ", 
+        'Type'
+    )
+    blacklist_keywords = get_filter_input(
+        "Enter keywords to exclude, separated by comma (or press enter to skip, '?' to list options): ", 
+        'Keywords'
+    )
     
     # apply inclusion filters
     if supervisor_filter:
